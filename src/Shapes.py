@@ -1,3 +1,4 @@
+import copy
 import random
 
 class Shapes:
@@ -107,25 +108,32 @@ class Shapes:
 
     def __init__(self):
         self.shapes = [self.S, self.Z, self.I, self.O, self.J, self.L, self.T]
+        self.currentShape = [0, 0, 0, 0]
         self.lastShape = [0, 0, 0]
         pass
 
-    def getRandomShape(self):
+    def setNextShape(self):
         index = random.randint(0, 6)
-        self.lastShape = [index, 0, len(self.shapes[index])]
-        return self.shapes[index][0]
+        color = random.randint(0, len(self.colors) - 1)
+        rotation = random.randint(0, len(self.shapes[index]) - 1)
+        self.lastShape = copy.deepcopy(self.currentShape)
+        self.currentShape = [index, rotation, len(self.shapes[index]) - 1, color]
+        
 
     def getCurrentShape(self):
-        return self.shapes[self.lastShape[0], self.lastShape[1]]
+        return self.shapes[self.currentShape[0]][self.currentShape[1]]
+    
+    def getCurrentColor(self):
+        return self.colors[self.currentShape[3]]
 
     def getRotatedShape(self):
-        shapeIndex = self.lastShape[0]
-        currentIndex = self.lastShape[1]
-        maxIndex = self.lastShape[2]
+        shapeIndex = self.currentShape[0]
+        currentIndex = self.currentShape[1]
+        maxIndex = self.currentShape[2]
         if currentIndex == maxIndex:
-            self.lastShape[1] = -1
-        self.lastShape[1] += 1
-        return self.shapes[shapeIndex, currentIndex + 1]
+            self.currentShape[1] = -1
+        self.currentShape[1] += 1
+        return self.currentShape
 
     def getRandomColor(self):
         return self.colors[random.randint(0, len(self.colors))]
